@@ -3,19 +3,20 @@
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 import streamlit as st
+from plotly.subplots import make_subplots
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 sys.path.append(str(Path(__file__).resolve().parents[2] / "src"))
 
 from data_loader import charger_donnees_completes
 from sdr_analytics.metrics import pareto_table
+from sdr_analytics.theme import COULEUR_FAMILLE, ECHELLE_DIVERGENTE, gabarit_plotly
 
 st.set_page_config(page_title="Âge / Usure", page_icon="✈️", layout="wide")
-st.title("Âge de l'appareil vs profil de pannes")
+st.title("📈 Âge de l'appareil vs profil de pannes")
 st.caption(
     "Certains chapitres ATA sont-ils plutôt des défauts de jeunesse, ou plutôt de l'usure "
     "qui s'accumule avec les cycles de vol ?"
@@ -60,20 +61,28 @@ st.caption(
     "seuil unique classerait presque tous les A350 comme \"jeunes\" à tort."
 )
 
-fig1, axes = plt.subplots(1, len(familles_choisies), figsize=(5 * len(familles_choisies), 4), squeeze=False)
-for ax, (famille, groupe) in zip(axes[0], df_age.groupby("famille_appareil")):
-    ax.hist(groupe["AircraftTotalCycles"], bins=30, color="#4C72B0")
-    ax.set_title(famille)
-    ax.set_xlabel("Cycles")
-axes[0][0].set_ylabel("Nombre de signalements")
-fig1.tight_layout()
-st.pyplot(fig1)
+fig1 = make_subplots(rows=1, cols=len(familles_choisies), subplot_titles=familles_choisies)
+for i, famille in enumerate(familles_choisies, start=1):
+    valeurs = df_age.loc[df_age["famille_appareil"] == famille, "AircraftTotalCycles"]
+    fig1.add_histogram(
+        x=valeurs,
+        marker_color=COULEUR_FAMILLE.get(famille, "#2a78d6"),
+        nbinsx=30,
+        row=1,
+        col=i,
+        showlegend=False,
+        hovertemplate="%{x} cycles<br>%{y} signalements<extra></extra>",
+    )
+    fig1.update_xaxes(title_text="Cycles", row=1, col=i)
+fig1.update_yaxes(title_text="Signalements", row=1, col=1)
+gabarit_plotly(fig1, hauteur=320)
+st.plotly_chart(fig1, config={"displayModeBar": False})
 
 # --- Lift par chapitre x tranche ---
 st.subheader("Chapitres sur/sous-représentés selon l'âge")
 st.caption(
     "Lift = signalements observés ÷ signalements attendus si l'âge n'avait aucun lien avec le "
-    "chapitre. Lift > 1 : plus signalé que la moyenne pour cette tranche. Lift < 1 : moins signalé."
+    "chapitre. **Bleu = moins signalé que la moyenne, rouge = plus signalé.** Blanc = aucun lien avec l'âge (lift = 1)."
 )
 
 nb_chapitres = st.slider("Nombre de chapitres à afficher", 5, 20, 10)
@@ -96,17 +105,22 @@ colonnes_ordre = [c for c in ["jeune", "mature", "âgé"] if c in tableau_lift.c
 tableau_lift = tableau_lift[colonnes_ordre]
 tableau_lift.index = tableau_lift.index.map(libelles)
 
-fig2, ax = plt.subplots(figsize=(6, max(4, len(tableau_lift) * 0.4)))
-im = ax.imshow(tableau_lift.values, cmap="RdBu_r", vmin=0.5, vmax=1.5, aspect="auto")
-ax.set_xticks(range(len(tableau_lift.columns)))
-ax.set_xticklabels(tableau_lift.columns)
-ax.set_yticks(range(len(tableau_lift.index)))
-ax.set_yticklabels(tableau_lift.index)
-for i in range(tableau_lift.shape[0]):
-    for j in range(tableau_lift.shape[1]):
-        valeur = tableau_lift.values[i, j]
-        if not np.isnan(valeur):
-            ax.text(j, i, f"{valeur:.2f}", ha="center", va="center", fontsize=8)
-plt.colorbar(im, ax=ax, label="Lift (observé / attendu)")
-fig2.tight_layout()
-st.pyplot(fig2)
+fig2 = go.Figure(
+    go.Heatmap(
+        z=tableau_lift.values,
+        x=tableau_lift.columns,
+        y=tableau_lift.index,
+        colorscale=ECHELLE_DIVERGENTE,
+        zmid=1.0,
+        zmin=0.5,
+        zmax=1.5,
+        text=[[f"{v:.2f}" if v == v else "" for v in row] for row in tableau_lift.values],
+        texttemplate="%{text}",
+        textfont=dict(size=12),
+        hovertemplate="%{y} · %{x}<br>lift = %{z:.2f}<extra></extra>",
+        colorbar=dict(title="lift"),
+    )
+)
+fig2.update_layout(yaxis=dict(autorange="reversed"))
+gabarit_plotly(fig2, hauteur=max(320, len(tableau_lift) * 38))
+st.plotly_chart(fig2, config={"displayModeBar": False})

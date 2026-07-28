@@ -6,3 +6,4 @@ pyarrow>=17.0
 streamlit>=1.38
 scikit-learn>=1.5
 pytest>=8.0
+plotly>=5.24
