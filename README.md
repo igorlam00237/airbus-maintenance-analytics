@@ -2,7 +2,7 @@
 
 Cartographie des défaillances de maintenance non programmée sur la flotte Airbus actuelle (A320 / A330 / A350), à partir des rapports publics de la FAA (Federal Aviation Administration) : par système d'appareil (chapitre ATA), par âge de flotte, et par motifs récurrents dans les narratifs techniques.
 
-**[▶ Voir le dashboard en ligne](#)** *(lien à confirmer)* · [Code source](https://github.com/igorlam00237/airbus-maintenance-analytics)
+**[▶ Voir le dashboard en ligne](https://airbus-maintenance-analytics-igorlaminsi.streamlit.app/)** · [Code source](https://github.com/igorlam00237/airbus-maintenance-analytics)
 
 ## Résultats clés
 
@@ -76,7 +76,7 @@ Puis exécuter les notebooks dans l'ordre (`notebooks/01_...` à `notebooks/06_.
 - [x] Analyse des narratifs techniques (text mining)
 - [x] Tendance temporelle par chapitre ATA
 - [x] Dashboard Streamlit (4 pages + accueil)
-- [ ] Déploiement public confirmé *(en cours)*
+- [x] Déploiement public sur Streamlit Community Cloud
 
 ## Méthodologie et limites
 
