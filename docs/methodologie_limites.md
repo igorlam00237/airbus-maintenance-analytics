@@ -62,4 +62,39 @@ Construite à partir de la nomenclature ATA-100 standard, largement documentée 
 
 ---
 
-*(Section réservée : conclusions et limites propres à chaque bloc d'analyse — cartographie ATA, âge/usure, text mining, tendance temporelle — à compléter au fur et à mesure de leur construction.)*
+## Conclusions par bloc d'analyse
+
+### Bloc 1 — Cartographie ATA
+
+Le volume de signalements est très concentré : le chapitre **Fuselage** représente à lui seul 30% de tous les signalements A320/A330/A350. Les 7 premiers chapitres (Fuselage, Éclairage, Portes, Équipements/aménagements, Climatisation, Empennages, Voilure) totalisent 82% du volume — la règle des 80/20 se vérifie presque exactement.
+
+Le taux normalisé (signalements pour 1000 avions distincts) donne une lecture différente du comptage brut : par exemple, l'A330 a un taux de signalement "Fuselage" nettement plus élevé que l'A320 une fois ramené à sa taille de flotte, alors qu'en comptage brut l'A320 domine largement (parce qu'il y a beaucoup plus d'A320 en service).
+
+**Limite** : les taux normalisés pour l'A330 (210 avions distincts) et surtout l'A350 (41 avions) reposent sur des échantillons bien plus petits que l'A320 (2 568 avions) — donc plus sensibles au bruit statistique.
+
+### Bloc 2 — Âge / usure
+
+Deux profils bien distincts selon l'âge de l'appareil (tranches calculées en terciles **par famille**, pas avec un seuil global — voir la justification dans le notebook 05) :
+
+- **Usure/fatigue** (lift croissant avec l'âge) : Fuselage et surtout Voilure — cohérent avec des éléments structurels soumis à la fatigue mécanique.
+- **Défauts de jeunesse** (lift décroissant avec l'âge) : Climatisation, Moteur, Équipements/aménagements, Portes — cohérent avec des systèmes qui posent davantage de problèmes en début de mise en service.
+
+**Limite** : le lift indique une association statistique, pas une preuve de cause. Les tranches d'âge sont relatives à chaque famille — "âgé" ne correspond pas au même nombre de cycles absolu selon la famille.
+
+### Bloc 3 — Text mining
+
+Le texte confirme et **explique** le résultat du bloc 2 : "corrosion" ressort comme terme caractéristique à la fois du Fuselage et de la Voilure — les deux chapitres identifiés comme "usure". Chaque chapitre a un vocabulaire distinct et cohérent (hinge/elevator/stabilizer pour les Empennages, gear/brake/wheel pour le Train d'atterrissage). Résultat le plus surprenant : la Climatisation est dominée par "odor/smell" plutôt que par du vocabulaire mécanique — le problème le plus fréquemment signalé semble être une odeur perçue en cabine plutôt qu'une panne du système en tant que tel.
+
+**Limite** : les 22 codes `NatureOfConditionA` n'ont pas pu être exploités faute de documentation FAA publique (voir §5) — le text mining sur `Discrepancy` reste la source principale d'information qualitative sur la nature des pannes.
+
+### Bloc 4 — Tendance temporelle
+
+La hausse brute du nombre de signalements (×2,5 entre 2015 et 2025) s'explique en grande partie par la croissance de la flotte observée (×1,9 sur la même période) — pas par une dégradation réelle de la fiabilité. Le taux normalisé n'a pas de tendance nette sur 10 ans et atteint son minimum en 2020, vraisemblablement un effet Covid (moins d'avions en vol, donc moins d'occasions de détecter et signaler un problème — une baisse de taux ne signifie pas toujours moins de pannes, elle peut signifier moins d'exposition).
+
+**Limite** : les variations d'une année sur l'autre pour un chapitre donné peuvent être bruyantes sur un seul point de comparaison (2024 → 2025) — à confirmer sur plusieurs années avant de conclure à une tendance structurelle.
+
+---
+
+## Incident corrigé pendant la construction
+
+Le fichier `agg_taille_flotte.parquet` (utilisé pour normaliser les comparaisons) a d'abord été calculé en incluant par erreur l'année 2026 (partielle), à cause d'un filtre manquant dans le notebook de nettoyage. L'erreur a été repérée avant que la moindre conclusion n'en soit tirée (dans le notebook de tendance temporelle, avant rédaction de la synthèse), corrigée à la source, et une assertion explicite a été ajoutée pour détecter une régression future. Un audit des notebooks en amont a confirmé qu'aucun résultat déjà publié n'était affecté. Documenté ici par souci de transparence sur le processus de construction, pas seulement sur le résultat final.

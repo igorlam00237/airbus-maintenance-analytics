@@ -2,7 +2,16 @@
 
 Cartographie des défaillances de maintenance non programmée sur la flotte Airbus actuelle (A320 / A330 / A350), à partir des rapports publics de la FAA (Federal Aviation Administration) : par système d'appareil (chapitre ATA), par âge de flotte, et par motifs récurrents dans les narratifs techniques.
 
-> **Statut du projet** : en cours de construction. Ce README est mis à jour au fur et à mesure — les sections marquées *(à venir)* correspondent à des analyses pas encore construites.
+**[▶ Voir le dashboard en ligne](#)** *(lien à confirmer)* · [Code source](https://github.com/igorlam00237/airbus-maintenance-analytics)
+
+## Résultats clés
+
+- **Le volume de signalements est très concentré** : un seul chapitre (Fuselage) représente 30% de tous les signalements. 7 chapitres sur 46 (Fuselage, Éclairage, Portes, Équipements, Climatisation, Empennages, Voilure) totalisent 82% du volume.
+- **La hausse brute du nombre de signalements dans le temps (×2,5 entre 2015 et 2025) s'explique en grande partie par la croissance de la flotte** (×1,9 sur la même période) — le taux normalisé, lui, n'a pas de tendance nette. 2020 (Covid) se démarque comme le creux le plus net.
+- **Deux profils de pannes distincts selon l'âge de l'appareil** : usure/fatigue pour les chapitres structurels (Fuselage, Voilure — plus signalés sur les avions âgés) vs défauts de jeunesse pour les systèmes/équipements (Climatisation, Moteur, Portes — plus signalés sur les avions jeunes).
+- **Le text mining confirme et explique ce second point** : "corrosion" ressort comme terme caractéristique du Fuselage et de la Voilure — cohérent avec un phénomène qui s'accumule avec les cycles de vol. La Climatisation, elle, est dominée par des signalements d'odeur ("odor/smell") plutôt que par des pannes mécaniques classiques.
+
+Détail complet de chaque analyse : voir les notebooks dans `notebooks/`, ou le dashboard interactif.
 
 ## Source des données
 
@@ -34,10 +43,10 @@ airbus-maintenance-analytics/
 │   ├── raw/            Données brutes FAA (non versionnées, à télécharger — voir plus bas)
 │   ├── reference/       Tables de référence (chapitres ATA, codes de condition)
 │   └── processed/       Données nettoyées, prêtes à l'analyse
-├── src/sdr_analytics/    Fonctions partagées (classification, nettoyage, métriques)
-├── notebooks/            Un notebook par étape de l'analyse
+├── src/sdr_analytics/    Fonctions partagées (classification, nettoyage, métriques, texte)
+├── notebooks/            Un notebook par étape de l'analyse (01 à 06)
 ├── tests/                 Tests automatiques
-├── dashboard/             Application Streamlit (à venir)
+├── dashboard/             Application Streamlit (accueil + 4 pages d'analyse)
 └── docs/                  Méthodologie et limites détaillées
 ```
 
@@ -62,11 +71,12 @@ Puis exécuter les notebooks dans l'ordre (`notebooks/01_...` à `notebooks/06_.
 
 - [x] Exploration initiale des données
 - [x] Nettoyage, classification par famille, préparation du jeu de données
-- [ ] Cartographie des défaillances par chapitre ATA *(à venir)*
-- [ ] Analyse âge de l'appareil vs profil de pannes *(à venir)*
-- [ ] Analyse des narratifs techniques (text mining) *(à venir)*
-- [ ] Tendance temporelle par chapitre ATA *(à venir)*
-- [ ] Dashboard Streamlit *(à venir)*
+- [x] Cartographie des défaillances par chapitre ATA
+- [x] Analyse âge de l'appareil vs profil de pannes
+- [x] Analyse des narratifs techniques (text mining)
+- [x] Tendance temporelle par chapitre ATA
+- [x] Dashboard Streamlit (4 pages + accueil)
+- [ ] Déploiement public confirmé *(en cours)*
 
 ## Méthodologie et limites
 
