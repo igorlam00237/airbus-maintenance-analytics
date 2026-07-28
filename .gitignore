@@ -3,9 +3,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 
-# Journal de suivi du projet — usage interne, pas destiné au repo public
-CLAUDE.md
-
 # Données brutes volumineuses (~320 Mo) — reproductibles via le lien de
-# téléchargement documenté dans CLAUDE.md, pas versionnées dans git
+# téléchargement FAA, pas versionnées dans git
 data/raw/
