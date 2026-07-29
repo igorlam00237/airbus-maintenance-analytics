@@ -2,7 +2,7 @@
 
 Cartographie des défaillances de maintenance non programmée sur la flotte Airbus actuelle (A320 / A330 / A350), à partir des rapports publics de la FAA (Federal Aviation Administration) : par système d'appareil (chapitre ATA), par âge de flotte, et par motifs récurrents dans les narratifs techniques.
 
-**[▶ Voir le dashboard en ligne](https://airbus-maintenance-analytics-igorlaminsi.streamlit.app/)** · [Code source](https://github.com/igorlam00237/airbus-maintenance-analytics)
+**[▶ Voir le dashboard en ligne](https://airbus-maintenance-analytics-igorlaminsi.streamlit.app/)** · [Rapport complet (PDF, EN)](docs/Airbus_Maintenance_Analytics_Report.pdf) · [Code source](https://github.com/igorlam00237/airbus-maintenance-analytics)
 
 ## Résultats clés
 
@@ -11,7 +11,7 @@ Cartographie des défaillances de maintenance non programmée sur la flotte Airb
 - **Deux profils de pannes distincts selon l'âge de l'appareil** : usure/fatigue pour les chapitres structurels (Fuselage, Voilure — plus signalés sur les avions âgés) vs défauts de jeunesse pour les systèmes/équipements (Climatisation, Moteur, Portes — plus signalés sur les avions jeunes).
 - **Le text mining confirme et explique ce second point** : "corrosion" ressort comme terme caractéristique du Fuselage et de la Voilure — cohérent avec un phénomène qui s'accumule avec les cycles de vol. La Climatisation, elle, est dominée par des signalements d'odeur ("odor/smell") plutôt que par des pannes mécaniques classiques.
 
-Détail complet de chaque analyse : voir les notebooks dans `notebooks/`, ou le dashboard interactif.
+Détail complet de chaque analyse : voir les notebooks dans `notebooks/`, le dashboard interactif, ou le [rapport de synthèse](docs/Airbus_Maintenance_Analytics_Report.pdf) (contexte, méthodologie, limites, conclusions et recommandations d'action, en anglais).
 
 ## Source des données
 
@@ -47,7 +47,7 @@ airbus-maintenance-analytics/
 ├── notebooks/            Un notebook par étape de l'analyse (01 à 06)
 ├── tests/                 Tests automatiques
 ├── dashboard/             Application Streamlit (accueil + 4 pages d'analyse)
-└── docs/                  Méthodologie et limites détaillées
+└── docs/                  Méthodologie, limites détaillées, et rapport de synthèse (PDF)
 ```
 
 ## Reproduire l'analyse
@@ -77,6 +77,7 @@ Puis exécuter les notebooks dans l'ordre (`notebooks/01_...` à `notebooks/06_.
 - [x] Tendance temporelle par chapitre ATA
 - [x] Dashboard Streamlit (4 pages + accueil)
 - [x] Déploiement public sur Streamlit Community Cloud
+- [x] Rapport de synthèse au format PDF (contexte, méthodologie, conclusions, recommandations)
 
 ## Méthodologie et limites
 
